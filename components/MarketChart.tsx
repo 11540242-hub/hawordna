@@ -8,7 +8,6 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  ReferenceLine,
   Cell
 } from 'recharts';
 import { StockCandle } from '../types';
@@ -42,15 +41,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 // 1. Bar 用於繪製 (開盤-收盤) 的實體
 // 2. Line (隱藏線) + ErrorBar 用於影線? 不，使用 ReferenceLine 或是簡單的 High/Low 區間顯示較難。
 // 簡化方案：專業的 K 線通常需要特殊的圖表庫 (如 lightweight-charts)。
-// 在 Recharts 中，我們可以用一條 Line 代表收盤走勢，Bar 代表成交量，
-// 或者用自定義 Shape 畫 K 線。這裡我們採用「收盤價走勢線 + 成交量」的簡潔呈現，
-// 加上自定義的高低點 Shape 會更好，但為求代碼精簡不崩潰，我們畫兩層：
-// 主圖：收盤價曲線 (Area)
-// 副圖：成交量 (Bar)
+// 在 Recharts 中，我們可以用一條 Line 代表收盤價走勢，Bar 代表成交量，
+// 或者用自定義 Shape 畫 K 線。這裡我們採用「收盤價走勢線 + 成交量」的簡潔呈現。
 
 const MarketChart: React.FC<MarketChartProps> = ({ data, symbol }) => {
-  const isUp = (d: StockCandle) => d.c >= d.o;
-
   return (
     <div className="w-full h-[400px] bg-white rounded-xl shadow-sm border border-slate-100 p-4">
       <div className="flex justify-between items-center mb-4">
@@ -89,7 +83,6 @@ const MarketChart: React.FC<MarketChartProps> = ({ data, symbol }) => {
             tick={{ fontSize: 11, fill: '#cbd5e1' }}
             axisLine={false}
             tickLine={false}
-            showGrid={false}
           />
           <Tooltip content={<CustomTooltip />} />
           
